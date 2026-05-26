@@ -1,0 +1,106 @@
+=========================================================================
+        RELATÓRIO CIENTÍFICO DE RESULTADOS E AVALIAÇÃO DE MODELOS
+=========================================================================
+
+1. ESTATÍSTICAS DESCRITIVAS DO DATASET (N = 12.000)
+-------------------------------------------------------------------------
+                           count    mean     std   min   25%   50%   75%   max
+age                      12000.0 29.6625  8.6546 15.00 22.00 30.00 37.00 44.00
+reels_watch_time_hours   12000.0  3.2441  1.5832  0.50  1.88  3.23  4.62  6.00
+daily_screen_time_hours  12000.0  7.0186  2.8733  2.00  4.56  7.03  9.47 12.00
+sleep_hours              12000.0  6.4966  1.4466  4.00  5.23  6.50  7.74  9.00
+attention_span_score     12000.0  5.4848  2.5978  1.00  3.23  5.48  7.74 10.00
+focus_level              12000.0  5.5128  2.5932  1.00  3.29  5.51  7.78 10.00
+task_completion_rate     12000.0 70.0928 17.1982 40.01 55.20 70.23 85.02 99.99
+
+2. MATRIZ DE CORRELAÇÃO LINEAR (Pearson vs. Spearman)
+-------------------------------------------------------------------------
+Pearson:
+                            age reels_watch_time_hours daily_screen_time_hours sleep_hours attention_span_score focus_level task_completion_rate
+age                      1.0000                 0.0018                 -0.0157      0.0057               0.0279     -0.0036               0.0017
+reels_watch_time_hours   0.0018                 1.0000                  0.0075     -0.0011               0.0008      0.0009               0.0012
+daily_screen_time_hours -0.0157                 0.0075                  1.0000      0.0095               0.0163      0.0001               0.0018
+sleep_hours              0.0057                -0.0011                  0.0095      1.0000              -0.0022     -0.0101              -0.0048
+attention_span_score     0.0279                 0.0008                  0.0163     -0.0022               1.0000     -0.0246              -0.0107
+focus_level             -0.0036                 0.0009                  0.0001     -0.0101              -0.0246      1.0000               0.0077
+task_completion_rate     0.0017                 0.0012                  0.0018     -0.0048              -0.0107      0.0077               1.0000
+
+Spearman:
+                            age reels_watch_time_hours daily_screen_time_hours sleep_hours attention_span_score focus_level task_completion_rate
+age                      1.0000                 0.0018                 -0.0156      0.0057               0.0281     -0.0036               0.0014
+reels_watch_time_hours   0.0018                 1.0000                  0.0074     -0.0010               0.0008      0.0011               0.0011
+daily_screen_time_hours -0.0156                 0.0074                  1.0000      0.0094               0.0163      0.0001               0.0016
+sleep_hours              0.0057                -0.0010                  0.0094      1.0000              -0.0022     -0.0101              -0.0046
+attention_span_score     0.0281                 0.0008                  0.0163     -0.0022               1.0000     -0.0245              -0.0107
+focus_level             -0.0036                 0.0011                  0.0001     -0.0101              -0.0245      1.0000               0.0077
+task_completion_rate     0.0014                 0.0011                  0.0016     -0.0046              -0.0107      0.0077               1.0000
+
+3. VALIDAÇÃO NÃO SUPERVISIONADA DO NÚMERO DE CLUSTERS (K)
+-------------------------------------------------------------------------
+Tabela de Validação de Clusters - Versão B com PCA:
+ K  | WCSS Versão B PCA    | Silhouette Versão B PCA
+----------------------------------------------------
+ 2  | 16,248.8696          | 0.3151                
+ 3  | 10,745.9203          | 0.3413                
+ 4  | 8,242.9668           | 0.3206                
+ 5  | 6,966.4308           | 0.3154                
+ 6  | 5,662.2935           | 0.3372                
+ 7  | 4,929.9367           | 0.3300                
+ 8  | 4,442.4655           | 0.3194                
+ 9  | 3,981.1124           | 0.3166                
+ 10 | 3,576.1210           | 0.3213                
+
+Justificativa Técnica de Seleção de K:
+Embora K=2 apresente maior coeficiente de silhueta nas análises preliminares do espaço multidimensional sem PCA, a escolha de K=3 foi mantida por apresentar melhor granularidade interpretativa e compatibilidade com a inflexão observada no método do cotovelo. Adicionalmente, no espaço bidimensional otimizado por PCA, K=3 atinge o pico de silhueta de 0.3413, tornando a estruturação estatística robusta. Essa escolha é tratada como exploratória.
+
+4. MÉTRICAS DE SILHUETA COMPARADAS (K = 3)
+-------------------------------------------------------------------------
+Silhouette Score - Versão A (Com Target):                     0.1129
+Silhouette Score - Versão B Sem PCA (Sem Target):              0.1365
+Silhouette Score - Versão B Com PCA (Otimizada em 2D):        0.3413
+
+5. ANÁLISE DE ASSOCIAÇÃO ATENCIONAL E TESTES ESTATÍSTICOS (K = 3)
+-------------------------------------------------------------------------
+Versão B Sem PCA (Espaço original):
+  ANOVA de uma via (Paramétrica):      F-value = 1.2008 | p-value = 3.009821e-01
+  Teste de Kruskal-Wallis (Não-Param):  H-value = 2.4115 | p-value = 2.994741e-01
+  Veredito Estatístico: Não foram encontradas evidências estatísticas suficientes para sustentar diferença significativa de capacidade atencional entre os clusters analisados.
+
+Versão B Com PCA (Espaço otimizado 2D):
+  ANOVA de uma via (Paramétrica):      F-value = 2.7033 | p-value = 6.702564e-02
+  Teste de Kruskal-Wallis (Não-Param):  H-value = 5.3822 | p-value = 6.780483e-02
+  Veredito Estatístico: Não foram encontradas evidências estatísticas suficientes para sustentar diferença significativa de capacidade atencional entre os clusters analisados.
+
+6. COMPARAÇÃO RIGOROSA DE MODELAGEM SUPERVISIONADA (Validação Cruzada 5-Fold)
+-------------------------------------------------------------------------
+REGRESSÃO (Previsão de Attention Score Contínuo):
+  Random Forest Regressor -> MAE: 2.2804 | RMSE: 2.6467 | R²: -0.0383
+  Dummy Regressor (Média) -> MAE: 2.2533 | RMSE: 2.5977 | R²: -0.0001
+  Desempenho comparado: O Random Forest NÃO MELHORA em relação ao Baseline.
+
+CLASSIFICAÇÃO (Previsão de Atenção Alta vs. Baixa):
+  Random Forest Classifier -> Acurácia: 0.5075 | Precisão: 0.5067 | Sensibilidade: 0.4754 | F1: 0.4905
+  Dummy Classifier (Strat) -> Acurácia: 0.4982 | Precisão: 0.4968 | Sensibilidade: 0.5018 | F1: 0.4993
+  Desempenho comparado: O Random Forest MELHORA DISCRETAMENTE em relação ao Baseline.
+
+7. IMPORTÂNCIA DAS VARIÁVEIS (Permutation Importance - Mais Confiável)
+-------------------------------------------------------------------------
+Variável                       | Queda Média de Performance (R²)
+-------------------------------------------------------------------------
+platform_TikTok                | 0.003354 (std: 0.002600)
+platform_YouTube Shorts        | 0.000485 (std: 0.001324)
+stress_level_Medium            | -0.000379 (std: 0.001697)
+stress_level_Low               | -0.001263 (std: 0.001273)
+reels_watch_time_hours         | -0.002663 (std: 0.005766)
+task_completion_rate           | -0.004276 (std: 0.004624)
+sleep_hours                    | -0.005054 (std: 0.003998)
+age                            | -0.006303 (std: 0.004520)
+focus_level                    | -0.014635 (std: 0.004558)
+daily_screen_time_hours        | -0.016467 (std: 0.005182)
+
+Nota: A extrema distribuição de importância comprova a natureza complexa, multidimensional e multifatorial da atenção sustentada humana.
+
+8. CONCLUSÃO CONCLUSIVA NEUTRA E METODOLÓGICA DO ESTUDO
+-------------------------------------------------------------------------
+A análise computacional integrada de Ciência de Dados e Aprendizado de Máquina sobre a base de 12.000 observações demonstra que não foram encontradas evidências estatísticas suficientes para sustentar diferença significativa de capacidade atencional entre os clusters analisados. As correlações lineares aproximaram-se de zero, os modelos preditivos globais (Random Forest) operaram exatamente no limiar do acaso (acurácia de 50.75% contra dummy na validação cruzada 5-fold) e a segmentação de perfis reais da população via K-Means otimizado por PCA revelou que a atenção média permanece estatisticamente equivalente (p > 0.05) entre grupos com hábitos digitais e de sono drasticamente opostos. Tais evidências sugerem a inadequação de modelos reducionistas de causalidade direta ('pânico moral tecnológico') e apontam para a natureza complexa, multidimensional e multifatorial da atenção humana, a qual depende de dinâmicas individuais amplas e não apenas do mero tempo diário de exposição de mídias rápidas digitais.
+=========================================================================

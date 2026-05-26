@@ -1,0 +1,13 @@
+VALIDACAO ESTATISTICA COMPLETA DOS CLUSTERS (VERSAO B)
+
+1. VERSAO B SEM PCA (Espaco 5D original):
+  Silhouette Score (K=3):         0.1365
+  ANOVA de uma via:               F-value = 1.2008 | p-value = 3.009821e-01
+  Teste de Kruskal-Wallis:        H-value = 2.4115 | p-value = 2.994741e-01
+  Conclusao: Nao foram encontradas evidencias estatisticas suficientes para sustentar diferenca significativa de capacidade atencional entre os clusters analisados.
+
+2. VERSAO B COM PCA (Espaco 2D reduzido):
+  Silhouette Score (K=3):         0.3413
+  ANOVA de uma via:               F-value = 2.7033 | p-value = 6.702564e-02
+  Teste de Kruskal-Wallis:        H-value = 5.3822 | p-value = 6.780483e-02
+  Conclusao: Nao foram encontradas evidencias estatisticas suficientes para sustentar diferenca significativa de capacidade atencional entre os clusters analisados.
