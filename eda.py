@@ -7,13 +7,11 @@ import os
 def main():
     clean_dataset_path = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\dataset_clean.csv"
     figuras_dir = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\figuras"
-    
+
     os.makedirs(figuras_dir, exist_ok=True)
-    
-    # Carregar dados
+
     df = pd.read_csv(clean_dataset_path)
-    
-    # Configurar estilo visual premium para os gráficos
+
     sns.set_theme(style="whitegrid")
     plt.rcParams.update({
         'font.family': 'sans-serif',
@@ -24,41 +22,36 @@ def main():
         'ytick.labelsize': 12,
         'figure.titlesize': 18
     })
-    
-    # 1. Estatísticas descritivas detalhadas
+
     num_cols = [
-        'age', 'reels_watch_time_hours', 'daily_screen_time_hours', 
+        'age', 'reels_watch_time_hours', 'daily_screen_time_hours',
         'sleep_hours', 'attention_span_score', 'focus_level', 'task_completion_rate'
     ]
-    
+
     desc = df[num_cols].describe()
     print("\n--- Estatísticas Descritivas Consolidadas ---")
     print(desc)
-    
-    # Salvar estatísticas descritivas em CSV para facilitar o uso nas tabelas do artigo
+
     desc.to_csv(os.path.join(figuras_dir, "estatisticas_descritivas.csv"))
-    
-    # 2. Matrizes de Correlação (Pearson e Spearman)
+
     correlation_pearson = df[num_cols].corr(method='pearson')
     correlation_spearman = df[num_cols].corr(method='spearman')
-    
-    # Salvar matrizes em CSV
+
     correlation_pearson.to_csv(os.path.join(figuras_dir, "pearson_correlation.csv"))
     correlation_spearman.to_csv(os.path.join(figuras_dir, "spearman_correlation.csv"))
-    
-    # Heatmap de correlação de Pearson
+
     plt.figure(figsize=(10, 8))
     mask = np.triu(np.ones_like(correlation_pearson, dtype=bool))
-    
+
     sns.heatmap(
-        correlation_pearson, 
-        mask=mask, 
-        annot=True, 
-        cmap="coolwarm", 
-        fmt=".3f", 
-        vmin=-1, 
-        vmax=1, 
-        square=True, 
+        correlation_pearson,
+        mask=mask,
+        annot=True,
+        cmap="coolwarm",
+        fmt=".3f",
+        vmin=-1,
+        vmax=1,
+        square=True,
         linewidths=0.5,
         cbar_kws={"shrink": 0.8}
     )
@@ -66,18 +59,17 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "heatmap_correlacao.png"), dpi=300)
     plt.close()
-    
-    # Heatmap de correlação de Spearman
+
     plt.figure(figsize=(10, 8))
     sns.heatmap(
-        correlation_spearman, 
-        mask=mask, 
-        annot=True, 
-        cmap="viridis", 
-        fmt=".3f", 
-        vmin=-1, 
-        vmax=1, 
-        square=True, 
+        correlation_spearman,
+        mask=mask,
+        annot=True,
+        cmap="viridis",
+        fmt=".3f",
+        vmin=-1,
+        vmax=1,
+        square=True,
         linewidths=0.5,
         cbar_kws={"shrink": 0.8}
     )
@@ -85,11 +77,10 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "heatmap_correlacao_spearman.png"), dpi=300)
     plt.close()
-    
+
     print("\nMatrizes de Correlação de Pearson e Spearman salvas em CSV com sucesso!")
     print("Heatmaps de correlação Pearson e Spearman salvos com sucesso!")
-    
-    # 3. Boxplot das variáveis preditoras para dispersão e escala
+
     plt.figure(figsize=(12, 6))
     df_melted = pd.melt(df[num_cols])
     sns.boxplot(x="variable", y="value", data=df_melted, palette="Set2")
@@ -100,37 +91,33 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "boxplot_distribuicao.png"), dpi=300)
     plt.close()
-    
+
     print("Boxplot geral salvo com sucesso!")
-    
-    # 4. Histogramas de distribuição
+
     fig, axes = plt.subplots(3, 3, figsize=(18, 15))
     axes = axes.flatten()
-    
+
     for i, col in enumerate(num_cols):
         sns.histplot(df[col], kde=True, ax=axes[i], color="skyblue", bins=30)
         axes[i].set_title(f"Distribuição de: {col}")
         axes[i].set_xlabel("")
         axes[i].set_ylabel("Frequência")
-        
-    # Remover eixos sobressalentes
+
     for j in range(len(num_cols), len(axes)):
         fig.delaxes(axes[j])
-        
+
     plt.suptitle("Distribuição Empírica das Variáveis do Estudo", y=0.98)
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "histogramas_distribuicao.png"), dpi=300)
     plt.close()
-    
+
     print("Histogramas de distribuição salvos com sucesso!")
-    
-    # 5. Gráficos de dispersão relevantes com linha de regressão
-    # Relação 1: tempo de vídeos curtos × score de atenção
+
     plt.figure(figsize=(8, 6))
     sns.regplot(
-        x="reels_watch_time_hours", 
-        y="attention_span_score", 
-        data=df, 
+        x="reels_watch_time_hours",
+        y="attention_span_score",
+        data=df,
         scatter_kws={"alpha": 0.3, "color": "darkblue", "s": 10},
         line_kws={"color": "red", "linewidth": 2}
     )
@@ -140,13 +127,12 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "scatter_reels_atencao.png"), dpi=300)
     plt.close()
-    
-    # Relação 2: tempo de tela × atenção
+
     plt.figure(figsize=(8, 6))
     sns.regplot(
-        x="daily_screen_time_hours", 
-        y="attention_span_score", 
-        data=df, 
+        x="daily_screen_time_hours",
+        y="attention_span_score",
+        data=df,
         scatter_kws={"alpha": 0.3, "color": "indigo", "s": 10},
         line_kws={"color": "orange", "linewidth": 2}
     )
@@ -156,13 +142,12 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "scatter_tela_atencao.png"), dpi=300)
     plt.close()
-    
-    # Relação 3: horas de sono × atenção
+
     plt.figure(figsize=(8, 6))
     sns.regplot(
-        x="sleep_hours", 
-        y="attention_span_score", 
-        data=df, 
+        x="sleep_hours",
+        y="attention_span_score",
+        data=df,
         scatter_kws={"alpha": 0.3, "color": "teal", "s": 10},
         line_kws={"color": "crimson", "linewidth": 2}
     )
@@ -172,13 +157,12 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "scatter_sono_atencao.png"), dpi=300)
     plt.close()
-    
-    # Relação 4: estresse (categórica) × atenção (contínua) -> Boxplot para rigor científico
+
     plt.figure(figsize=(8, 6))
     sns.boxplot(
-        x="stress_level", 
-        y="attention_span_score", 
-        data=df, 
+        x="stress_level",
+        y="attention_span_score",
+        data=df,
         order=["Low", "Medium", "High"],
         palette="crest"
     )
@@ -188,13 +172,12 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "scatter_estresse_atencao.png"), dpi=300)
     plt.close()
-    
-    # Relação 5: foco × desempenho (taxa de conclusão)
+
     plt.figure(figsize=(8, 6))
     sns.regplot(
-        x="focus_level", 
-        y="task_completion_rate", 
-        data=df, 
+        x="focus_level",
+        y="task_completion_rate",
+        data=df,
         scatter_kws={"alpha": 0.3, "color": "darkgreen", "s": 10},
         line_kws={"color": "magenta", "linewidth": 2}
     )
@@ -204,7 +187,7 @@ def main():
     plt.tight_layout()
     plt.savefig(os.path.join(figuras_dir, "scatter_foco_desempenho.png"), dpi=300)
     plt.close()
-    
+
     print("Gráficos de dispersão e boxplots de relações salvos com sucesso!")
     print(f"\nTodos os artefatos de EDA foram gerados e salvos em: {figuras_dir}")
 
