@@ -1,0 +1,30 @@
+=== ANÁLISES COMPLEMENTARES EXPLORATÓRIAS ===
+Este script realiza análises complementares na relação entre consumo de vídeos curtos e atenção.
+Todas as conclusões a seguir são de caráter exploratório, sugerindo padrões estatísticos e não implicando causalidade.
+
+--- Testes Estatísticos (Target: attention_span_score) ---
+T-test: Baixo vs Alto consumo: P-val original = 0.9946, P-val corrigido (FDR) = 0.9946
+Mann-Whitney: Baixo vs Alto consumo: P-val original = 0.9780, P-val corrigido (FDR) = 0.9946
+ANOVA: Plataforma: P-val original = 0.0630, P-val corrigido (FDR) = 0.2521
+Kruskal: Plataforma: P-val original = 0.0625, P-val corrigido (FDR) = 0.2521
+ANOVA: Quartis Consumo: P-val original = 0.8093, P-val corrigido (FDR) = 0.9946
+Kruskal: Quartis Consumo: P-val original = 0.8070, P-val corrigido (FDR) = 0.9946
+ANOVA: Quartis Ratio: P-val original = 0.6383, P-val corrigido (FDR) = 0.9946
+Kruskal: Quartis Ratio: P-val original = 0.6402, P-val corrigido (FDR) = 0.9946
+
+Resultado Estatístico: A análise complementar exploratória não encontrou evidências suficientes para apontar diferenças significativas no nível de atenção sob as variáveis estudadas, após aplicação do rigor da correção FDR. Isso sugere ausência de relação forte e direta nestes cortes.
+
+--- Modelagem Supervisionada (CV 5-Fold) ---
+NOTA: O target de classificação ('attention_span_bin') foi criado dividindo a variável contínua pela mediana apenas de forma exploratória, mantendo a regressão como abordagem principal.
+Resultado Regressão: Os modelos não apresentaram melhorias expressivas em comparação ao Dummy Regressor (Best R2: -0.0001 vs Dummy: -0.0001). Isso sugere que as variáveis não possuem sinal preditivo robusto.
+Resultado Classificação: Os modelos de classificação alternativa apresentaram performance virtualmente idêntica à de um adivinhador cego da maioria (Dummy Classifier), sugerindo forte limitação no poder preditivo para essa divisão (Best Acc: 0.5108 vs Dummy: 0.5001).
+
+--- Clusterização sem a Variável Alvo ---
+Cluster K-Means: Silhouette=0.1322, Davies-Bouldin=2.3183, Calinski-Harabasz=1873.3788
+  -> Comparação Attention Score por Cluster (K-Means): ANOVA p_val=0.2717, Kruskal p_val=0.2732
+Cluster GMM: Silhouette=0.1281, Davies-Bouldin=2.3479, Calinski-Harabasz=1824.0412
+  -> Comparação Attention Score por Cluster (GMM): ANOVA p_val=0.3965, Kruskal p_val=0.4015
+Cluster Agglomerative: Silhouette=0.1166, Davies-Bouldin=2.4667, Calinski-Harabasz=1697.5027
+  -> Comparação Attention Score por Cluster (Agglomerative): ANOVA p_val=0.2088, Kruskal p_val=0.2087
+
+Relatório finalizado. Análises e figuras salvas com sucesso.

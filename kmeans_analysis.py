@@ -9,8 +9,8 @@ from scipy import stats
 import os
 
 def main():
-    clean_dataset_path = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\dataset_clean.csv"
-    figuras_dir = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\figuras"
+    clean_dataset_path = "dataset_clean.csv"
+    figuras_dir = "figuras"
 
     os.makedirs(figuras_dir, exist_ok=True)
 

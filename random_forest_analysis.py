@@ -15,9 +15,9 @@ from scipy import stats
 import os
 
 def main():
-    clean_dataset_path = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\dataset_clean.csv"
-    figuras_dir = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\figuras"
-    output_final_path = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\resultados_modelos_final.txt"
+    clean_dataset_path = "dataset_clean.csv"
+    figuras_dir = "figuras"
+    output_final_path = "resultados_modelos_final.txt"
 
     os.makedirs(figuras_dir, exist_ok=True)
 
@@ -41,6 +41,7 @@ def main():
 
     scoring_reg = {
         'mae': 'neg_mean_absolute_error',
+        'mse': 'neg_mean_squared_error',
         'rmse': 'neg_root_mean_squared_error',
         'r2': 'r2'
     }
@@ -49,15 +50,17 @@ def main():
     cv_dummy_reg = cross_validate(dummy_reg, X, y_reg, cv=kf, scoring=scoring_reg, n_jobs=-1)
 
     mae_rf = -np.mean(cv_rf_reg['test_mae'])
+    mse_rf = -np.mean(cv_rf_reg['test_mse'])
     rmse_rf = -np.mean(cv_rf_reg['test_rmse'])
     r2_rf = np.mean(cv_rf_reg['test_r2'])
 
     mae_dummy = -np.mean(cv_dummy_reg['test_mae'])
+    mse_dummy = -np.mean(cv_dummy_reg['test_mse'])
     rmse_dummy = -np.mean(cv_dummy_reg['test_rmse'])
     r2_dummy = np.mean(cv_dummy_reg['test_r2'])
 
-    print(f"RF Regressor -> MAE: {mae_rf:.4f} | RMSE: {rmse_rf:.4f} | R²: {r2_rf:.4f}")
-    print(f"Dummy Regressor -> MAE: {mae_dummy:.4f} | RMSE: {rmse_dummy:.4f} | R²: {r2_dummy:.4f}")
+    print(f"RF Regressor -> MAE: {mae_rf:.4f} | MSE: {mse_rf:.4f} | RMSE: {rmse_rf:.4f} | R²: {r2_rf:.4f}")
+    print(f"Dummy Regressor -> MAE: {mae_dummy:.4f} | MSE: {mse_dummy:.4f} | RMSE: {rmse_dummy:.4f} | R²: {r2_dummy:.4f}")
 
     reg_comparison = "NÃO MELHORA" if r2_rf <= r2_dummy else "MELHORA DISCRETAMENTE"
 
@@ -239,11 +242,14 @@ def main():
             f.write(f"  Teste de Kruskal-Wallis (Não-Param):  H-value = {h_val_com:.4f} | p-value = {kruskal_p_com:.6e}\n")
             f.write("  Veredito Estatístico: Não foram encontradas evidências estatísticas suficientes para sustentar diferença significativa de capacidade atencional entre os clusters analisados.\n\n")
 
-            f.write("6. COMPARAÇÃO RIGOROSA DE MODELAGEM SUPERVISIONADA (Validação Cruzada 5-Fold)\n")
+            f.write("6. METODOLOGIA E COMPARAÇÃO DE MODELAGEM SUPERVISIONADA\n")
             f.write("-------------------------------------------------------------------------\n")
+            f.write("Metodologia de Divisão de Dados:\n")
+            f.write("- O desempenho geral dos modelos foi mensurado utilizando Validação Cruzada 5-Fold.\n")
+            f.write("- Para análises de Importância de Atributos (Permutation Importance) e Matriz de Confusão, os dados foram divididos em 80% para treinamento e 20% para teste, utilizando random_state=42.\n\n")
             f.write("REGRESSÃO (Previsão de Attention Score Contínuo):\n")
-            f.write(f"  Random Forest Regressor -> MAE: {mae_rf:.4f} | RMSE: {rmse_rf:.4f} | R²: {r2_rf:.4f}\n")
-            f.write(f"  Dummy Regressor (Média) -> MAE: {mae_dummy:.4f} | RMSE: {rmse_dummy:.4f} | R²: {r2_dummy:.4f}\n")
+            f.write(f"  Random Forest Regressor -> MAE: {mae_rf:.4f} | MSE: {mse_rf:.4f} | RMSE: {rmse_rf:.4f} | R²: {r2_rf:.4f}\n")
+            f.write(f"  Dummy Regressor (Média) -> MAE: {mae_dummy:.4f} | MSE: {mse_dummy:.4f} | RMSE: {rmse_dummy:.4f} | R²: {r2_dummy:.4f}\n")
             f.write(f"  Desempenho comparado: O Random Forest {reg_comparison} em relação ao Baseline.\n\n")
 
             f.write("CLASSIFICAÇÃO (Previsão de Atenção Alta vs. Baixa):\n")

@@ -5,8 +5,8 @@ import seaborn as sns
 import os
 
 def main():
-    clean_dataset_path = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\dataset_clean.csv"
-    figuras_dir = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\figuras"
+    clean_dataset_path = "dataset_clean.csv"
+    figuras_dir = "figuras"
 
     os.makedirs(figuras_dir, exist_ok=True)
 
@@ -57,7 +57,7 @@ def main():
     )
     plt.title("Matriz de Correlação Linear de Pearson", pad=20)
     plt.tight_layout()
-    plt.savefig(os.path.join(figuras_dir, "heatmap_correlacao.png"), dpi=300)
+    plt.savefig(os.path.join(figuras_dir, "heatmap_correlacao_pearson.png"), dpi=300)
     plt.close()
 
     plt.figure(figsize=(10, 8))

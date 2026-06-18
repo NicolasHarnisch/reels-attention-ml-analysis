@@ -4,8 +4,8 @@ from sklearn.preprocessing import StandardScaler
 import os
 
 def main():
-    input_path = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\reels_attention_span_dataset_12000.csv"
-    output_path = r"c:\Users\nicol\Documentos\Arquivos - Estudo\Projetos\algoritmo-artigo\dataset_clean.csv"
+    input_path = "reels_attention_span_dataset_12000.csv"
+    output_path = "dataset_clean.csv"
 
     print("Iniciando Pré-processamento dos Dados...")
 
